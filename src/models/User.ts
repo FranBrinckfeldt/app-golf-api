@@ -1,5 +1,16 @@
 import mongoose from 'mongoose'
 
+const Location = new mongoose.Schema({
+  address: {
+    type: String,
+    required: true
+  },
+  country: {
+    type: String,
+    required: true
+  }
+}, { _id: false })
+
 const UserSchema = new mongoose.Schema({
   firstname: {
     type: String,
@@ -27,6 +38,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     enum: ['ADMIN', 'PLAYER'],
     default: 'PLAYER'
+  },
+  location: {
+    type: Location,
+    required: true
   }
 }, { timestamps: true })
 
