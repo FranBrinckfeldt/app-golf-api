@@ -1,17 +1,5 @@
 import mongoose, { Schema } from 'mongoose'
 
-const Player = new Schema({
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  place: {
-    type: Number,
-    default: 0
-  }
-}, { _id: false })
-
 const TournamentSchema = new Schema({
   name: {
     type: String,
@@ -23,10 +11,6 @@ const TournamentSchema = new Schema({
   },
   endDate: {
     type: Date,
-    required: true
-  },
-  ladder: {
-    type: [Player],
     required: true
   }
 }, { timestamps: true })
