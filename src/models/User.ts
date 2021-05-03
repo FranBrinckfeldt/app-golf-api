@@ -18,6 +18,15 @@ const UserSchema = new mongoose.Schema({
     required: true,
     index: true,
     unique: true
+  },
+  phone: {
+    type: String,
+    required: true
+  },
+  role: {
+    type: String,
+    enum: ['ADMIN', 'PLAYER'],
+    default: 'PLAYER'
   }
 }, { timestamps: true })
 
