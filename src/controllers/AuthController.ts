@@ -6,7 +6,7 @@ import { tokenSign } from '../utils/jwt'
 const SALT_WORK_FACTOR = 10
 
 class AuthController {
-  login = async (ctx:Context): Promise<void> => {
+  login = async (ctx: Context): Promise<void> => {
     const payload = ctx.request.body
     if (payload) {
       const user = await User.findOne({ email: payload.email })
@@ -24,7 +24,7 @@ class AuthController {
     ctx.throw(401, 'INVALID_CREDENTIALS')
   }
 
-  register = async (ctx:Context): Promise<void> => {
+  register = async (ctx: Context): Promise<void> => {
     const payload = ctx.request.body
     if (payload) {
       try {
