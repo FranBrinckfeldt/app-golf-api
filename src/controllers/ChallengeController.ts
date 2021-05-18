@@ -1,25 +1,25 @@
 import { Context } from 'koa'
-import Tournament from '../models/Tournament'
+import Challenge from '../models/Challenge'
 
-class TournamentController {
+class ChallengeController {
   findAll = async (ctx: Context): Promise<void> => {
-    const tournaments = await Tournament.find()
-    ctx.body = tournaments
+    const challenges = await Challenge.find()
+    ctx.body = challenges
   }
 
   findById = async (ctx: Context): Promise<void> => {
     const { id } = ctx.params
-    const tournament = await Tournament.findById(id)
-    if (!tournament) {
+    const challenge = await Challenge.findById(id)
+    if (!challenge) {
       ctx.throw(404)
     }
-    ctx.body = tournament
+    ctx.body = challenge
   }
 
   insert = async (ctx: Context): Promise<void> => {
     const payload = ctx.request.body
-    const newTournament = new Tournament(payload)
-    const res = await newTournament.save()
+    const newChallenge = new Challenge(payload)
+    const res = await newChallenge.save()
     ctx.body = res
     ctx.status = 201
   }
@@ -27,15 +27,15 @@ class TournamentController {
   update = async (ctx: Context): Promise<void> => {
     const { id } = ctx.params
     const payload = ctx.request.body
-    const res = await Tournament.findByIdAndUpdate(id, payload)
+    const res = await Challenge.findByIdAndUpdate(id, payload)
     ctx.body = res
   }
 
   delete = async (ctx: Context): Promise<void> => {
     const { id } = ctx.params
-    const res = await Tournament.findByIdAndDelete(id)
+    const res = await Challenge.findByIdAndDelete(id)
     ctx.body = res
   }
 }
 
-export default TournamentController
+export default ChallengeController
