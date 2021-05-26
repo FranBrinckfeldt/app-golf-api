@@ -5,9 +5,10 @@ const PRIVATE_KEY = process.env.SECRET_KEY || 'secret'
 
 export interface TokenPayload {
   _id: string
-  firstname: string
-  lastname: string
   email: string
+  role: string
+  active: boolean
+  sub?: string
 }
 
 export interface TokenDecoded extends TokenPayload {
@@ -24,8 +25,12 @@ export const tokenVerify = (bearerToken: string): TokenDecoded => {
 }
 
 export const tokenSign = (payload: TokenPayload): string => {
-  const tokenPayload = {
-    sub: payload._id
+  const tokenPayload: TokenPayload = {
+    sub: payload._id,
+    _id: payload._id,
+    email: payload.email,
+    role: payload.role,
+    active: payload.active
   }
   return jwt.sign(tokenPayload, PRIVATE_KEY, { expiresIn: '1h' })
 }

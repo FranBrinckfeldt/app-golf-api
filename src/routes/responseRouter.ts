@@ -7,8 +7,7 @@ const controller = new ResponseController()
 router
   .get('/', controller.findAll)
   .get('/:id', controller.findById)
-  .post('/', controller.insert)
-  .put('/:id', controller.update)
-  .delete('/:id', controller.delete)
+  .post('/accept/:idChallenge', controller.accept)
+  .post('/decline/:idChallenge', controller.decline)
 
 export default router

@@ -12,8 +12,7 @@ const ResponseSchema = new mongoose.Schema({
     default: false
   },
   reason: {
-    type: String,
-    required: true
+    type: String
   },
   message: {
     type: String

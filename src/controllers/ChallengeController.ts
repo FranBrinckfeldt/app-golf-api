@@ -16,26 +16,33 @@ class ChallengeController {
     ctx.body = challenge
   }
 
-  insert = async (ctx: Context): Promise<void> => {
+  request = async (ctx: Context): Promise<void> => {
+    const { idTournament, idOponent } = ctx.params
     const payload = ctx.request.body
-    const newChallenge = new Challenge(payload)
+    const newChallenge = new Challenge({
+      tournament: idTournament,
+      date: payload.date,
+      place: payload.place,
+      challenger: ctx.state.user.sub,
+      challenged: idOponent
+    })
     const res = await newChallenge.save()
     ctx.body = res
     ctx.status = 201
   }
 
-  update = async (ctx: Context): Promise<void> => {
-    const { id } = ctx.params
-    const payload = ctx.request.body
-    const res = await Challenge.findByIdAndUpdate(id, payload)
-    ctx.body = res
-  }
+  // update = async (ctx: Context): Promise<void> => {
+  //   const { id } = ctx.params
+  //   const payload = ctx.request.body
+  //   const res = await Challenge.findByIdAndUpdate(id, payload)
+  //   ctx.body = res
+  // }
 
-  delete = async (ctx: Context): Promise<void> => {
-    const { id } = ctx.params
-    const res = await Challenge.findByIdAndDelete(id)
-    ctx.body = res
-  }
+  // delete = async (ctx: Context): Promise<void> => {
+  //   const { id } = ctx.params
+  //   const res = await Challenge.findByIdAndDelete(id)
+  //   ctx.body = res
+  // }
 }
 
 export default ChallengeController
