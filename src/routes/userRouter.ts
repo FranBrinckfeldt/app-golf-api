@@ -7,8 +7,7 @@ const controller = new UserController()
 router
   .get('/', controller.findAll)
   .get('/:id', controller.findById)
-  .post('/', controller.insert)
-  .put('/:id', controller.update)
+  .post('/', controller.registerUser)
   .delete('/:id', controller.delete)
 
 export default router

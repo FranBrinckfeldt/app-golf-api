@@ -24,19 +24,24 @@ class AuthController {
     ctx.throw(401, 'INVALID_CREDENTIALS')
   }
 
-  register = async (ctx: Context): Promise<void> => {
+  createPassword = async (ctx: Context): Promise<void> => {
+    const userId = ctx.state.user.sub
     const payload = ctx.request.body
-    if (payload) {
+    const userToUpdate = await User.findById(userId)
+    if (userToUpdate) {
       try {
-        const newUser = new User(payload)
+        if (userToUpdate.password) {
+          ctx.throw(401)
+        }
         const salt = await bcrypt.genSalt(SALT_WORK_FACTOR)
-        newUser.password = await bcrypt.hash(payload.password, salt)
-        await newUser.save()
-        ctx.status = 201
-        ctx.body = newUser
+        const password = await bcrypt.hash(payload.password, salt)
+        await User.findByIdAndUpdate(userId, { password })
+        ctx.status = 204
       } catch (error) {
         console.error(error)
       }
+    } else {
+      ctx.throw(404)
     }
   }
 }

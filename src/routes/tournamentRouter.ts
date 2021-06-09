@@ -9,6 +9,8 @@ router
   .get('/:id', controller.findById)
   .post('/', controller.insert)
   .put('/:id', controller.update)
+  .put('/:id/set-ladder', controller.setLadder)
+  .put('/:id/ladder-climb', controller.ladderClimb)
   .delete('/:id', controller.delete)
 
 export default router

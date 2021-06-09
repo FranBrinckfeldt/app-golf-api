@@ -32,5 +32,5 @@ export const tokenSign = (payload: TokenPayload): string => {
     role: payload.role,
     active: payload.active
   }
-  return jwt.sign(tokenPayload, PRIVATE_KEY, { expiresIn: '1h' })
+  return jwt.sign(tokenPayload, PRIVATE_KEY, { expiresIn: '24h' })
 }
