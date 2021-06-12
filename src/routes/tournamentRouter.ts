@@ -8,6 +8,7 @@ const controller = new TournamentController()
 router
   .get('/', controller.findAll)
   .get('/:id', objectIdValidator, controller.findById)
+  .get('/:id/challenges', objectIdValidator, controller.getChallengesByTournament)
   .post('/', controller.insert)
   .put('/:id', objectIdValidator, controller.update)
   .put('/:id/set-ladder', objectIdValidator, controller.setLadder)

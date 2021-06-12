@@ -1,5 +1,7 @@
+/* eslint-disable no-underscore-dangle */
 import { Context } from 'koa'
 import { filter, findIndex, insert, uniq } from 'ramda'
+import Challenge from '../models/Challenge'
 import Tournament from '../models/Tournament'
 
 class TournamentController {
@@ -15,6 +17,23 @@ class TournamentController {
       ctx.throw(404)
     }
     ctx.body = tournament
+  }
+
+  getChallengesByTournament = async (ctx: Context): Promise<void> => {
+    const user = ctx.state.user
+    const { id } = ctx.params
+    const challengesSent = await Challenge.find({
+      tournament: id,
+      challenger: user._id
+    }).populate('challenged').exec()
+    const challengesReceived = await Challenge.find({
+      tournament: id,
+      challenged: user._id
+    }).populate('challenger').exec()
+    ctx.body = {
+      sent: challengesSent,
+      received: challengesReceived
+    }
   }
 
   insert = async (ctx: Context): Promise<void> => {
