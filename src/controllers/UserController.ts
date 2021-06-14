@@ -41,20 +41,13 @@ class UserController {
     }
   }
 
-  // insert = async (ctx: Context): Promise<void> => {
-  //   const payload = ctx.request.body
-  //   const newUser = new User(payload)
-  //   const res = await newUser.save()
-  //   ctx.body = res
-  //   ctx.status = 201
-  // }
-
-  // update = async (ctx: Context): Promise<void> => {
-  //   const { id } = ctx.params
-  //   const payload = ctx.request.body
-  //   const res = await User.findByIdAndUpdate(id, payload)
-  //   ctx.body = res
-  // }
+  update = async (ctx: Context): Promise<void> => {
+    const { id } = ctx.params
+    console.log(id)
+    const payload = ctx.request.body
+    const res = await User.findByIdAndUpdate(id, payload)
+    ctx.body = res
+  }
 
   delete = async (ctx: Context): Promise<void> => {
     const { id } = ctx.params

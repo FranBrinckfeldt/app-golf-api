@@ -9,6 +9,7 @@ router
   .get('/', controller.findAll)
   .get('/:id', objectIdValidator, controller.findById)
   .post('/', controller.registerUser)
+  .put('/:id', objectIdValidator, controller.update)
   .delete('/:id', objectIdValidator, controller.delete)
 
 export default router

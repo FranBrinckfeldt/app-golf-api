@@ -1,6 +1,5 @@
 import { Context } from 'koa'
 import Challenge from '../models/Challenge'
-import Tournament from '../models/Tournament'
 
 class ChallengeController {
   findAll = async (ctx: Context): Promise<void> => {
