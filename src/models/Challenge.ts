@@ -11,8 +11,7 @@ const ChallengeSchema = new Schema({
     required: true
   },
   place: {
-    type: Schema.Types.ObjectId,
-    ref: 'Place',
+    type: String,
     required: true
   },
   challenger: {

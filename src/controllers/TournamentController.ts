@@ -2,6 +2,8 @@
 import { Context } from 'koa'
 import { filter, findIndex, insert, uniq } from 'ramda'
 import Challenge from '../models/Challenge'
+import Response from '../models/Response'
+import Result from '../models/Result'
 import Tournament from '../models/Tournament'
 
 class TournamentController {
@@ -22,18 +24,29 @@ class TournamentController {
   getChallengesByTournament = async (ctx: Context): Promise<void> => {
     const user = ctx.state.user
     const { id } = ctx.params
-    const challengesSent = await Challenge.find({
+    const challenges = await Challenge.find({
       tournament: id,
-      challenger: user._id
-    }).populate('challenged').exec()
-    const challengesReceived = await Challenge.find({
-      tournament: id,
-      challenged: user._id
-    }).populate('challenger').exec()
-    ctx.body = {
-      sent: challengesSent,
-      received: challengesReceived
-    }
+      $or: [
+        { challenger: user._id },
+        { challenged: user._id }
+      ]
+    }).populate('challenged').populate('challenger').exec()
+    const challengesIds = challenges.map((val: { _id: string }) => val._id)
+    const responses = await Response.find({
+      challenge: { $in: challengesIds }
+    })
+    const results = await Result.find({
+      challenge: { $in: challengesIds }
+    })
+    const fullChallenges = challenges
+      .map((val: Record<string, string | (() => Record<string, string>)>) => ({
+        ...(val.toObject as () => Record<string, string>)(),
+        result: results
+          .find((result: Record<string, string>) => result.challenge === val._id),
+        response: responses
+          .find((response: Record<string, string>) => response.challenge === val._id)
+      }))
+    ctx.body = fullChallenges
   }
 
   insert = async (ctx: Context): Promise<void> => {
