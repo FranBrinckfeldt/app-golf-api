@@ -9,7 +9,7 @@ const ResponseSchema = new mongoose.Schema({
   },
   accept: {
     type: Boolean,
-    default: false
+    required: true
   },
   reason: {
     type: String

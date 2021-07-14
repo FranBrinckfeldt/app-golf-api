@@ -9,6 +9,8 @@ router
   .get('/', controller.findAll)
   .get('/:id', objectIdValidator, controller.findById)
   .post('/', controller.insert)
+  .post('/winner/:challengeId', controller.winner)
+  .put('/confirm/:resultId', controller.confirm)
   .put('/:id', objectIdValidator, controller.update)
   .delete('/:id', objectIdValidator, controller.delete)
 

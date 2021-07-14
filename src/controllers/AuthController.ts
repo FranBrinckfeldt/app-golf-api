@@ -11,6 +11,9 @@ class AuthController {
     if (payload) {
       const user = await User.findOne({ email: payload.email })
       if (user) {
+        if (!user.active) {
+          ctx.throw(401, 'BLOCKED_USER')
+        }
         const passwordMatch = await bcrypt.compare(payload.password, user.password)
         if (passwordMatch) {
           const token = tokenSign(user)

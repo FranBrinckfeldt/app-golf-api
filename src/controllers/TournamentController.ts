@@ -1,15 +1,23 @@
 /* eslint-disable no-underscore-dangle */
 import { Context } from 'koa'
+import { Types } from 'mongoose'
 import { filter, findIndex, insert, uniq } from 'ramda'
 import Challenge from '../models/Challenge'
 import Response from '../models/Response'
 import Result from '../models/Result'
 import Tournament from '../models/Tournament'
 
+type RecordString = Record<string, string>
+
 class TournamentController {
   findAll = async (ctx: Context): Promise<void> => {
-    const tournaments = await Tournament.find()
-    ctx.body = tournaments
+    if (ctx.state.user.role === 'ADMIN') {
+      const tournaments = await Tournament.find()
+      ctx.body = tournaments
+    } else {
+      const tournaments = await Tournament.find({ participants: ctx.state.user.sub })
+      ctx.body = tournaments
+    }
   }
 
   findById = async (ctx: Context): Promise<void> => {
@@ -31,20 +39,20 @@ class TournamentController {
         { challenged: user._id }
       ]
     }).populate('challenged').populate('challenger').exec()
-    const challengesIds = challenges.map((val: { _id: string }) => val._id)
+    const challengesIds = challenges.map((val: { _id: string }) => Types.ObjectId(val._id))
     const responses = await Response.find({
       challenge: { $in: challengesIds }
     })
     const results = await Result.find({
       challenge: { $in: challengesIds }
-    })
+    }).populate('winner').populate('looser').exec()
     const fullChallenges = challenges
-      .map((val: Record<string, string | (() => Record<string, string>)>) => ({
+      .map((val: Record<string, string | (() => RecordString)>) => ({
         ...(val.toObject as () => Record<string, string>)(),
         result: results
-          .find((result: Record<string, string>) => result.challenge === val._id),
+          .find((result: RecordString) => String(result.challenge) === String(val._id)),
         response: responses
-          .find((response: Record<string, string>) => response.challenge === val._id)
+          .find((response: RecordString) => String(response.challenge) === String(val._id))
       }))
     ctx.body = fullChallenges
   }

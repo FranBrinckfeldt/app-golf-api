@@ -1,16 +1,5 @@
 import mongoose, { Schema } from 'mongoose'
 
-const PlayerResult = new mongoose.Schema({
-  points: {
-    type: Number,
-    required: true
-  },
-  confirmed: {
-    type: Boolean,
-    default: false
-  }
-}, { _id: false })
-
 const ResultSchema = new mongoose.Schema({
   challenge: {
     type: Schema.Types.ObjectId,
@@ -18,13 +7,18 @@ const ResultSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  challenger: {
-    type: PlayerResult,
+  winner: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
     required: true
   },
-  challenged: {
-    type: PlayerResult,
-    required: true
+  looser: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  confirm: {
+    type: Boolean,
+    default: false
   }
 }, { timestamps: true })
 

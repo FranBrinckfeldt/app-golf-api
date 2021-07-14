@@ -7,8 +7,14 @@ const SALT_WORK_FACTOR = 10
 
 class UserController {
   findAll = async (ctx: Context): Promise<void> => {
-    const users = await User.find()
-    ctx.body = users
+    const { emailq } = ctx.query
+    if (emailq) {
+      const users = await User.find({ email: { $regex: `${emailq}` } })
+      ctx.body = users
+    } else {
+      const users = await User.find()
+      ctx.body = users
+    }
   }
 
   findById = async (ctx: Context): Promise<void> => {
@@ -43,9 +49,15 @@ class UserController {
 
   update = async (ctx: Context): Promise<void> => {
     const { id } = ctx.params
-    console.log(id)
     const payload = ctx.request.body
     const res = await User.findByIdAndUpdate(id, payload)
+    ctx.body = res
+  }
+
+  switchActive = async (ctx: Context): Promise<void> => {
+    const { id } = ctx.params
+    const prevState = await User.findById(id)
+    const res = await User.findByIdAndUpdate(id, { active: !prevState.active })
     ctx.body = res
   }
 
