@@ -8,6 +8,7 @@ import responseRouter from './responseRouter'
 import resultRouter from './resultRouter'
 import tournamentRouter from './tournamentRouter'
 import userRouter from './userRouter'
+import notificationRouter from './notificationsRouter'
 
 const router = new Router()
 
@@ -22,5 +23,6 @@ router.use('/responses', tokenValidation, responseRouter.routes())
 router.use('/results', tokenValidation, resultRouter.routes())
 router.use('/tournaments', tokenValidation, tournamentRouter.routes())
 router.use('/users', tokenValidation, userRouter.routes())
+router.use('/notifications', tokenValidation, notificationRouter.routes())
 
 export default router

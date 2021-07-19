@@ -2,6 +2,7 @@ import { Context } from 'koa'
 import bcrypt from 'bcryptjs'
 import User from '../models/User'
 import { tokenSign } from '../utils/jwt'
+import { onUserCreate } from '../events'
 
 const SALT_WORK_FACTOR = 10
 
@@ -37,6 +38,7 @@ class UserController {
         }
         await newUser.save()
         const token = tokenSign(newUser)
+        onUserCreate(newUser.toObject(), token)
         ctx.status = 201
         ctx.body = {
           accessToken: token

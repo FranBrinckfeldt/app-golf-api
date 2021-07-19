@@ -50,3 +50,9 @@ const UserSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 export default mongoose.model('User', UserSchema)
+
+export interface UserDTO {
+  firstname: string
+  lastname: string
+  email: string
+}

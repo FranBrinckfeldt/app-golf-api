@@ -1,6 +1,7 @@
 import { Context } from 'koa'
 import { isValidObjectId } from 'mongoose'
 import { filter, findIndex, insert, uniq } from 'ramda'
+import { onNewChallengeResult } from '../events'
 import Challenge from '../models/Challenge'
 import Result from '../models/Result'
 import Tournament from '../models/Tournament'
@@ -46,6 +47,7 @@ class ResultController {
       winner: user.sub,
       looser: looserId
     })
+    onNewChallengeResult(result)
     await result.save()
     ctx.status = 201
   }

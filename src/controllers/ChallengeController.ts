@@ -4,6 +4,7 @@ import { endOfMonth, startOfMonth } from 'date-fns'
 import Challenge from '../models/Challenge'
 import Response from '../models/Response'
 import Result from '../models/Result'
+import { onNewChallenge } from '../events'
 
 const checkDisponibility = async (ctx: Context) => {
   const { idTournament, idOponent } = ctx.params
@@ -102,6 +103,7 @@ class ChallengeController {
       challenged: idOponent
     })
     const res = await newChallenge.save()
+    onNewChallenge(newChallenge)
     ctx.body = res
     ctx.status = 201
   }
