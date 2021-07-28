@@ -3,7 +3,6 @@ import { Context } from 'koa'
 import tokenValidation from '../middlewares/tokenValidation'
 import authRouter from './authRouter'
 import challengeRouter from './challengeRouter'
-import competitorRouter from './competitorRouter'
 import responseRouter from './responseRouter'
 import resultRouter from './resultRouter'
 import tournamentRouter from './tournamentRouter'
@@ -18,7 +17,6 @@ router.get('/', (ctx:Context): void => {
 
 router.use(authRouter.routes())
 router.use('/challenges', tokenValidation, challengeRouter.routes())
-router.use('/competitors', tokenValidation, competitorRouter.routes())
 router.use('/responses', tokenValidation, responseRouter.routes())
 router.use('/results', tokenValidation, resultRouter.routes())
 router.use('/tournaments', tokenValidation, tournamentRouter.routes())

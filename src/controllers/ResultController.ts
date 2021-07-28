@@ -1,3 +1,4 @@
+import { getWeekOfMonth } from 'date-fns'
 import { Context } from 'koa'
 import { isValidObjectId } from 'mongoose'
 import { filter, findIndex, insert, uniq } from 'ramda'
@@ -55,6 +56,9 @@ class ResultController {
   confirm = async (ctx: Context): Promise<void> => {
     const { resultId } = ctx.params
     const { user } = ctx.state
+
+    const specialWeek = process.env.FORCE_SPECIAL_WEEK === 'true' || getWeekOfMonth(new Date()) === 1
+
     if (!isValidObjectId(resultId)) {
       ctx.throw(400, 'Bad ID')
     }
@@ -94,6 +98,28 @@ class ResultController {
         tournament.participants
       )
       const newLadder = insert(indexToInsert + 1, result.winner, ladderWithoutWinner)
+
+      await Tournament.findByIdAndUpdate(tournamentId, {
+        $set: { participants: newLadder }
+      })
+    } else if (specialWeek) {
+      const placeDifference = looserIndex - winnerIndex
+      const ladderWithoutLooser = filter(
+        val => String(val) !== String(result.looser),
+        tournament.participants
+      )
+      let indexToInsert
+      if (placeDifference >= 1 && placeDifference <= 5) {
+        indexToInsert = looserIndex + 1
+      } else if (placeDifference >= 6 && placeDifference <= 10) {
+        indexToInsert = looserIndex + 2
+      } else {
+        indexToInsert = looserIndex + 3
+      }
+      if (indexToInsert >= ladderWithoutLooser.length) {
+        indexToInsert = ladderWithoutLooser.length
+      }
+      const newLadder = insert(indexToInsert, result.looser, ladderWithoutLooser)
 
       await Tournament.findByIdAndUpdate(tournamentId, {
         $set: { participants: newLadder }
